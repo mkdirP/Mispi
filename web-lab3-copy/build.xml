@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project name="Basics-of-SE-Lab-3" default="compile">
+
+    <property name="src" location="src"/>
+    <property name="class" location="target/classes"/>
+    <property name="jar" location="out/artifacts/web_lab3_jar"/>
+    <property name="main-class" location="src/main/java/MainBean.java"/>
+    <property name="diff" value="diff.text"/>
+    <property name="last.successful.revision" value=""/>
+    <property name="changes.detected" value="false"/>
+
+    <!-- 定义JUnit JAR文件的路径 -->
+    <path id="junit">
+        <pathelement location="junit-4.12.jar"/>
+    </path>
+    <path id="hamcrest">
+        <pathelement location="hamcrest-core-1.3.jar"/>
+    </path>
+    <path id="ant-contrib">
+        <pathelement location="ant-contrib-1.0b3.jar"/>
+    </path>
+
+    <taskdef resource="net/sf/antcontrib/antlib.xml">
+        <classpath refid="ant-contrib"/>
+    </taskdef>
+
+    <path id="classpath">
+        <fileset dir="out" includes="**/*.jar"/>
+    </path>
+
+    <target name="compile" description="Compile project sources">
+        <echo>Compiling the project sources...</echo>
+        <mkdir dir="${class}"/>
+        <javac srcdir="${src}"
+               destdir="${class}" includeantruntime="false">
+            <classpath>
+                <path refid="junit"/>
+                <path refid="hamcrest"/>
+                <path refid="classpath"/>
+            </classpath>
+        </javac>
+        <echo>Compile successfully</echo>
+    </target>
+
+
+    <target name="build" depends="compile" description="Packaging compiled files into an executable jar archive">
+        <echo>Building...</echo>
+        <mkdir dir="${jar}"/>
+        <jar basedir="${class}" destfile="${jar}/${ant.project.name}.jar">
+            <manifest>
+                <attribute name="Main-Class" value="${main-class}"/>
+                <attribute name="Version" value="1.0"/>
+            </manifest>
+        </jar>
+        <echo>Package successfully</echo>
+    </target>
+
+
+    <target name="clean" description="Deleting compiled project classes and all temporary files">
+        <echo>Deleting the project...</echo>
+        <delete dir="${class}"/>
+        <echo>Deleted successfully</echo>
+    </target>
+
+
+    <target name="test" depends="build" description="Running the project">
+        <echo>Program testing...</echo>
+        <junit printsummary="on" haltonerror="true">
+            <classpath refid="junit"/>
+            <classpath refid="hamcrest"/>
+            <classpath>
+                <path refid="classpath"/>
+                <pathelement location="${class}"/>
+                <pathelement location="${main-class}"/>
+                <pathelement location="${class}"/>
+            </classpath>
+            <test name="EntryTest" todir="target"/>
+            <formatter type="plain" usefile="false"/>
+        </junit>
+        <echo>Program testing successfully</echo>
+    </target>
+
+
+    <target name="xml" description="Validation of all xml files in the project">
+        <echo>XML project files validation...</echo>
+        <xmlvalidate lenient="true">
+            <fileset dir="./" includes="**/*.xml">
+                <exclude name=".idea/**"/>
+            </fileset>
+        </xmlvalidate>
+        <echo>XML files validation completed successfully!</echo>
+    </target>
+
+    <target name="history">
+        <trycatch>
+            <try>
+                <runtarget target="compile"/>
+                <echo message="--- NO ERRORS, COMPILE DONE ---"/>
+            </try>
+            <catch>
+                <exec executable="bash" outputproperty="git_log_head">
+                    <arg value="-c"/>
+                    <arg value="git log --pretty=format:'%h - %an, %ar : %s' | head -1"/>
+                </exec>
+                <exec executable="bash" outputproperty="git_log_tail">
+                    <arg value="-c"/>
+                    <arg value="git log --pretty=format:'%h - %an, %ar : %s' | tail -1"/>
+                </exec>
+                <if>
+                    <equals arg1="${git_log_head}" arg2="${git_log_tail}"/>
+                    <then>
+                        <echo message="I cannot build the first commit. Stop"/>
+                    </then>
+                    <else>
+                        <exec executable="bash" output="diff">
+                            <arg value="-c"/>
+                            <arg value="git diff HEAD~1"/>
+                        </exec>
+                        <exec executable="bash">
+                            <arg value="-c"/>
+                            <arg value="git reset HEAD~1 --hard"/>
+                        </exec>
+                        <runtarget target="history"/>
+                    </else>
+                </if>
+            </catch>
+        </trycatch>
+    </target>
+
+
+
+</project>
+
