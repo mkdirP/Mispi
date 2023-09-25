@@ -62,7 +62,7 @@
                     <h:message id="messageR" for="R_field" class="alert alert-primary" style="color: red"/>
                 </p:panelGrid>
 
-                <h:commandButton id="submitButton" value="Send"  action="#{mainBean.addEntry}" >
+                <h:commandButton id="submitButton" value="Send data" action="#{mainBean.addEntry}">
                     <f:ajax execute="@form" render="messageR messageY messageX entriesTable table" onevent="redraw"/>
                 </h:commandButton>
             </h:form>
@@ -81,6 +81,7 @@
                     <h:inputText id="checkBasic" value="${lab4.repeated}" style="visibility: hidden"/>
                     <h:commandButton id = "addButton" action="#{lab4.addDot()}" onclick="get_values()" style="visibility: hidden">
                         <f:ajax execute="checkForm" render="checkBasic nums_all nums_not_hit" onevent="check_repeat"/>
+
                     </h:commandButton>
                 </h:form>
             </ui:insert>

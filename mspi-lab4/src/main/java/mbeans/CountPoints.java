@@ -10,19 +10,17 @@ import javax.management.Notification;
 import javax.management.NotificationBroadcasterSupport;
 import webBack.Entry;
 import webBack.EntryDao;
-import webBack.MainBean;
 
 @Data
 @SessionScoped
 @ManagedBean(name = "lab4")
 public class CountPoints extends NotificationBroadcasterSupport implements CountPointsMBean {
 
-    private List<Entry> all_entries = new ArrayList<Entry>();
+    private ArrayList<Entry> all_entries = new ArrayList<Entry>();
     private ArrayList<Entry> fifteen_entries = new ArrayList<Entry>();
     private ArrayList<Entry> not_in_range = new ArrayList<Entry>();
     private EntryDao entryDao;
-    private MainBean mainBean;
-    private Entry entry;
+    private Entry entry = new Entry();
     private int nums_total = all_entries.size();
     private int nums_not_hit = not_in_range.size();
     public boolean repeated = false;
@@ -34,7 +32,7 @@ public class CountPoints extends NotificationBroadcasterSupport implements Count
 
     public void countPoints() {
         setRepeated(true);
-        if(all_entries.size() % 15 != 0){
+        if(all_entries.size() % 45 != 0){
             setRepeated(false);
             return;
         }
@@ -56,23 +54,22 @@ public class CountPoints extends NotificationBroadcasterSupport implements Count
         this.repeated = repeated;
     }
 
-
     public void addDot(){
-        all_entries = mainBean.getEntries();
-        for (Entry entry1 : all_entries){
-            if(!entry.isResult()){
-                not_in_range.add(entry);
-            }
-            if(all_entries.size()% 15 == 0){
-                fifteen_entries.remove(0);
-                fifteen_entries.add(entry);
-            }else {
-                fifteen_entries.add(entry);
-            }
-            countPoints();
-            nums_total = all_entries.size();
-            nums_not_hit = not_in_range.size();
-        }
 
+        this.entry = new Entry(entry.getX(),entry.getY(),entry.getR());
+        all_entries.add(entry);
+        entry.check();
+        if(!entry.isResult()){
+            not_in_range.add(entry);
+        }
+        if(all_entries.size()% 45 == 0){
+            fifteen_entries.remove(0);
+            fifteen_entries.add(entry);
+        }else {
+            fifteen_entries.add(entry);
+        }
+        countPoints();
+        nums_total = all_entries.size()/3;
+        nums_not_hit = not_in_range.size()/3;
     }
 }

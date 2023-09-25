@@ -47,8 +47,8 @@ function redraw() {
         addMark(R.toFixed(3), 5 / 6 * width, height / 2);
         addMark((-R/2).toFixed(3), 2 / 6 * width, height / 2);
         addMark((-R).toFixed(3), 1 / 6 * width, height / 2);
-
         paintPoints(R);
+        document.getElementById("checkForm:addButton").click();
     }
 }
 // 绘制线条和文本
@@ -159,6 +159,7 @@ function clickOnCanvas(event) {
 }
 
 //这两个是给Repeat用的
+
 function get_values(){
     document.getElementById("checkForm:checkX").value = x;
     document.getElementById("checkForm:checkR").value = r;
