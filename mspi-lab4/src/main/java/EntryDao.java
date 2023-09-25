@@ -1,5 +1,3 @@
-package webBack;
-
 import javax.enterprise.inject.Model;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -38,6 +36,7 @@ public class EntryDao {
         try {
             transaction.begin();
             entityManager.persist(entry);
+            EntryCounter.getInstance().countEntry(entry.isResult());
             transaction.commit();
         } catch (Exception e) {
             try {

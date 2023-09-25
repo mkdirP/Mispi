@@ -1,5 +1,3 @@
-package webBack;
-
 import javax.persistence.*;
 
 @Entity
@@ -17,7 +15,7 @@ public class Entry {
     @Column(nullable = false)
     private String session_id;
     @Column(nullable = false)
-    private boolean result;
+    public boolean result;
 
     public String getSession_id() {
         return session_id;
@@ -53,6 +51,7 @@ public class Entry {
         } else if ((X < 0) && (Y < 0)) {
             this.result = false;
         }
+
     }
 
     public void setX(Double x) {
@@ -76,11 +75,5 @@ public class Entry {
     }
 
     public Entry() {
-    }
-
-    public Entry(Double x, Double y, Double r) {
-        X = x;
-        Y = y;
-        R = r;
     }
 }

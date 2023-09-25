@@ -1,8 +1,3 @@
-package webBack;
-
-import webBack.Entry;
-import webBack.EntryDao;
-
 import javax.inject.Inject;
 import java.io.Serializable;
 import java.util.List;
@@ -32,10 +27,13 @@ public class  MainBean implements Serializable {
         return entryDao.getEntries(this.session_id.toString());
     }
 
-    public void addEntry(){
+    public void addEntry(boolean isCanvas){
         newEntry.setSession_id(session_id.toString());
         newEntry.check();
         entryDao.add(newEntry);
+        if (isCanvas) {
+            IntervalCounter.getInstance().updateInterval();
+        }
         newEntry = new Entry();
     }
 }

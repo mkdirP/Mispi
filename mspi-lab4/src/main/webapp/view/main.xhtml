@@ -62,35 +62,31 @@
                     <h:message id="messageR" for="R_field" class="alert alert-primary" style="color: red"/>
                 </p:panelGrid>
 
-                <h:commandButton id="submitButton" value="Send data" action="#{mainBean.addEntry}">
+                <!--                <h:panelGrid columns="3" class="my-2 mx-2">-->
+                <!--                    <h:outputLabel id="labelR" for="R_field" class="input-group-text">R:</h:outputLabel>-->
+                <!--                    <h:inputText class="form-control" id="R_field" maxlength="8" required="true" value="#{mainBean.newEntry.r}"-->
+                <!--                                 requiredMessage="Value is required."-->
+                <!--                                 converterMessage="Value must be a number."-->
+                <!--                                 validatorMessage="Value must be a number between {1,3}">-->
+                <!--                        <f:validateDoubleRange minimum="1" maximum="3" />-->
+                <!--                        <f:ajax event="change" render="messageR" />-->
+                <!--                    </h:inputText>-->
+                <!--                    <h:message id="messageR" for="R_field" class="alert alert-primary" />-->
+                <!--                </h:panelGrid>-->
+
+                <h:commandButton id="submitButton" value="Send data" action="#{mainBean.addEntry(false)}" >
+                    <f:ajax execute="@form" render="messageR messageY messageX entriesTable table" onevent="redraw"/>
+                </h:commandButton>
+                <h:commandButton id="submitCanvasButton" action="#{mainBean.addEntry(true)}" style="visibility: hidden">
                     <f:ajax execute="@form" render="messageR messageY messageX entriesTable table" onevent="redraw"/>
                 </h:commandButton>
             </h:form>
-
-            <ui:insert name="checkForm" >
-                <h:form id="checkForm">
-                    <div>
-                        nums of dots:<h:outputText id="nums_all" value="${lab4.nums_total}"/>
-                    </div>
-                    <div>
-                        nums of not hit dots:<h:outputText id = "nums_not_hit"  value="${lab4.nums_not_hit}"/>
-                    </div>
-                    <h:inputText id="checkX" value="${lab4.entry.x}" style="visibility: hidden"/>
-                    <h:inputText id="checkR" value="${lab4.entry.r}" style="visibility: hidden"/>
-                    <h:inputText id="checkY" value="${lab4.entry.y}" style="visibility: hidden"/>
-                    <h:inputText id="checkBasic" value="${lab4.repeated}" style="visibility: hidden"/>
-                    <h:commandButton id = "addButton" action="#{lab4.addDot()}" onclick="get_values()" style="visibility: hidden">
-                        <f:ajax execute="checkForm" render="checkBasic nums_all nums_not_hit" onevent="check_repeat"/>
-
-                    </h:commandButton>
-                </h:form>
-            </ui:insert>
         </div>
     </div>
 
     <h:panelGroup id="table">
         <p:dataTable value="#{mainBean.entries}" var="entry"
-                     paginator="true" rows="15"
+                     paginator="true" rows="20"
                      paginatorTemplate="{PreviousPageLink} {PageLinks} {NextPageLink}">
             <p:column headerText="X">
                 <h:outputText value="#{entry.x}"/>

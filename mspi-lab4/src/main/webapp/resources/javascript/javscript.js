@@ -7,11 +7,6 @@ const width = canvas.width;
 const height = canvas.height;
 const blue = "#2f9aff";
 
-let r;
-let x;
-let y;
-
-
 function redraw() {
     let R = getR();
     let rad = height / 40;
@@ -47,8 +42,8 @@ function redraw() {
         addMark(R.toFixed(3), 5 / 6 * width, height / 2);
         addMark((-R/2).toFixed(3), 2 / 6 * width, height / 2);
         addMark((-R).toFixed(3), 1 / 6 * width, height / 2);
+
         paintPoints(R);
-        document.getElementById("checkForm:addButton").click();
     }
 }
 // 绘制线条和文本
@@ -103,8 +98,8 @@ function getPoints() {
 function paintPoints(R) {
     getPoints().forEach(function (point) {
         if (!Array.from(point.values()).includes("")){
-            x = width / 2 + Number(point.get('X')) * Math.round(width / 3)  / Number(R);
-            y = height / 2 - Number(point.get('Y')) * Math.round(height / 3) / Number(R);
+            let x = width / 2 + Number(point.get('X')) * Math.round(width / 3)  / Number(R);
+            let y = height / 2 - Number(point.get('Y')) * Math.round(height / 3) / Number(R);
             if (checkHit(Number(point.get('X')), Number(point.get('Y')), R)){
                 paintPoint(x, y, "#3fcd0b")
             } else paintPoint(x, y, "red");
@@ -135,12 +130,12 @@ function getR(){
 
 //获取点击的值并放在xyr中
 function clickOnCanvas(event) {
-    r = getR();
+    let r = getR();
     if (r == null) {
         form[form.id + ":R_field"].requiredMessage="Value is required.";
     } else {
-        x = event.pageX - (canvas.getBoundingClientRect().left + pageXOffset);
-        y = event.pageY - (canvas.getBoundingClientRect().top + pageYOffset);
+        const x = event.pageX - (canvas.getBoundingClientRect().left + pageXOffset);
+        const y = event.pageY - (canvas.getBoundingClientRect().top + pageYOffset);
 
         const cordX = ((x - width / 2) * Number(r) / Math.round(width / 3)).toFixed(3);
         const cordY = ((height / 2 - y) * Number(r) / Math.round(height / 3)).toFixed(3);
@@ -148,7 +143,7 @@ function clickOnCanvas(event) {
         form[form.id + ":X_field"].value = cordX;
         form[form.id + ":Y_field"].value = cordY;
         form[form.id + ":R_field"].value = r;
-        form[form.id + ":submitButton"].click();
+        form[form.id + ":submitCanvasButton"].click();
     }
 }
 
@@ -156,20 +151,4 @@ function clickOnCanvas(event) {
     document.getElementById("canvas").onclick = clickOnCanvas;
     form[form.id + ":R_field"].oninput = redraw;
     redraw();
-}
-
-//这两个是给Repeat用的
-
-function get_values(){
-    document.getElementById("checkForm:checkX").value = x;
-    document.getElementById("checkForm:checkR").value = r;
-    document.getElementById("checkForm:checkY").value = y;
-}
-function check_repeat(data){
-    if(data.status == "success") {
-        let repeated = document.getElementById("checkForm:checkBasic").value;
-        if (repeated === 'true') {
-            alert("Points are multiples of 15")
-        }
-    }
 }

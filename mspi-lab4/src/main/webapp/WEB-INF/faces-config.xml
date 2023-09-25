@@ -6,7 +6,7 @@
 
     <managed-bean>
         <managed-bean-name>mainBean</managed-bean-name>
-        <managed-bean-class>webBack.MainBean</managed-bean-class>
+        <managed-bean-class>MainBean</managed-bean-class>
         <managed-bean-scope>session</managed-bean-scope>
     </managed-bean>
 
